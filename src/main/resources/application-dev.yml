@@ -1,0 +1,13 @@
+spring:
+  config:
+    activate:
+      on-profile: dev
+    import: classpath:secret.yml
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${quixx.db.url}/quixx
+    username: ${quixx.db.username}
+    password: ${quixx.db.password}
+  jpa:
+    hibernate:
+      ddl-auto: update

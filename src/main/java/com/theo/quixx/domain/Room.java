@@ -54,7 +54,7 @@ public class Room {
         return secondPlayer != null;
     }
 
-    public void roomClose() {
+    public void close() {
         this.active = false;
     }
 }

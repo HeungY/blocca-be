@@ -27,7 +27,8 @@ public class RoomServiceTest {
 
         // when
         String code = roomService.createRoom(requestDTO).getCode();
-        Room savedRoom = roomRepository.findByCode(code);
+        Room savedRoom = roomRepository.findByCode(code)
+                .orElseThrow(()->new IllegalArgumentException("방이 존재하지 않습니다."));
 
         // then
         assertThat(savedRoom.getFirstPlayer()).isEqualTo("theo");

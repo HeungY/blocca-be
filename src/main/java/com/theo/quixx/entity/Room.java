@@ -1,4 +1,4 @@
-package com.theo.quixx.domain;
+package com.theo.quixx.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

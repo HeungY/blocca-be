@@ -2,7 +2,7 @@ package com.theo.quixx.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.theo.quixx.domain.Room;
+import com.theo.quixx.entity.Room;
 import com.theo.quixx.dto.room.CreateRequestDTO;
 import com.theo.quixx.repository.RoomRepository;
 import jakarta.transaction.Transactional;

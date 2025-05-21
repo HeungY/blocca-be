@@ -1,6 +1,6 @@
 package com.theo.quixx.repository;
 
-import com.theo.quixx.domain.Room;
+import com.theo.quixx.entity.Room;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 

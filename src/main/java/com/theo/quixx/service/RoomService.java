@@ -3,7 +3,7 @@ package com.theo.quixx.service;
 import static com.theo.quixx.util.Constant.GENERATE_CODE_CHARACTERS;
 import static com.theo.quixx.util.Constant.MAX_CODE_LENGTH;
 
-import com.theo.quixx.domain.Room;
+import com.theo.quixx.entity.Room;
 import com.theo.quixx.dto.room.CreateRequestDTO;
 import com.theo.quixx.dto.room.CreateResponseDTO;
 import com.theo.quixx.dto.room.JoinRequestDTO;

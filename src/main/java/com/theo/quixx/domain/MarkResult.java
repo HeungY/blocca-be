@@ -1,5 +1,5 @@
 package com.theo.quixx.domain;
 
 public enum MarkResult {
-    SUCCESS, FAILURE, END
+    SUCCESS, FAILURE, END, LOCKED
 }

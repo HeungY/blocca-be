@@ -1,5 +1,8 @@
 package com.theo.quixx.domain;
 
+import com.theo.quixx.domain.enums.Color;
+import com.theo.quixx.domain.enums.MarkResult;
+import com.theo.quixx.domain.enums.Phase;
 import com.theo.quixx.dto.game.payload.DicePayload;
 import com.theo.quixx.dto.game.payload.ResultPayload;
 import java.util.HashMap;

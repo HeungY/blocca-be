@@ -1,10 +1,10 @@
 package com.theo.quixx.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.theo.quixx.domain.Action;
-import com.theo.quixx.domain.Color;
+import com.theo.quixx.domain.enums.Action;
+import com.theo.quixx.domain.enums.Color;
 import com.theo.quixx.domain.Game;
-import com.theo.quixx.domain.MarkResult;
+import com.theo.quixx.domain.enums.MarkResult;
 import com.theo.quixx.dto.game.GameMessage;
 import com.theo.quixx.dto.game.ResponseMessage;
 import com.theo.quixx.dto.game.payload.MarkPayload;

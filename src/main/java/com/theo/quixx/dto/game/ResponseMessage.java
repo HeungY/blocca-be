@@ -1,6 +1,6 @@
 package com.theo.quixx.dto.game;
 
-import com.theo.quixx.domain.Action;
+import com.theo.quixx.domain.enums.Action;
 import com.theo.quixx.dto.game.payload.GamePayload;
 import lombok.Builder;
 import lombok.Getter;

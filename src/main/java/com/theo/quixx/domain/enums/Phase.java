@@ -1,4 +1,4 @@
-package com.theo.quixx.domain;
+package com.theo.quixx.domain.enums;
 
 public enum Phase {
     DICE_ROLL_PHASE,

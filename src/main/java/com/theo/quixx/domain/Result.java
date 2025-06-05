@@ -1,5 +1,6 @@
 package com.theo.quixx.domain;
 
+import com.theo.quixx.domain.enums.Color;
 import com.theo.quixx.dto.game.payload.ResultPayload;
 import java.util.ArrayList;
 import java.util.HashMap;

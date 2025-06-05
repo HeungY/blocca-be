@@ -1,5 +1,6 @@
 package com.theo.quixx.domain;
 
+import com.theo.quixx.domain.enums.Color;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashSet;

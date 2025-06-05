@@ -1,6 +1,6 @@
 package com.theo.quixx.dto.game.payload;
 
-import com.theo.quixx.domain.Color;
+import com.theo.quixx.domain.enums.Color;
 
 public class TurnPayload extends MarkPayload{
     private String turnPlayer;

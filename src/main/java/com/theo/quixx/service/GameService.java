@@ -35,7 +35,7 @@ public class GameService {
 
         Game game = gameMap.get(code);
         if (game == null) {
-            return;
+            throw new IllegalArgumentException("해당 코드로 개설된 방이 없습니다.");
         }
 
 

@@ -1,39 +1,19 @@
 package com.theo.quixx.controller;
 
-import com.theo.quixx.dto.room.CreateRequestDTO;
-import com.theo.quixx.dto.room.CreateResponseDTO;
-import com.theo.quixx.dto.room.JoinRequestDTO;
-import com.theo.quixx.dto.room.JoinResponseDTO;
-import com.theo.quixx.service.RoomService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.theo.quixx.dto.game.GameMessage;
+import com.theo.quixx.service.GameService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.stereotype.Controller;
 
-@RestController
-@RequestMapping("/api")
+@Controller
+@RequiredArgsConstructor
 public class GameController {
 
-    private final RoomService roomService;
+    private final GameService gameService;
 
-    public GameController(RoomService roomService) {
-        this.roomService = roomService;
+    @MessageMapping("/game")
+    public void handleGame(GameMessage gameMessage) {
+        gameService.handleGameMessage(gameMessage);
     }
-
-    @GetMapping("/hc")
-    public ResponseEntity<?> healthcheck() {
-        return ResponseEntity.ok("Server is alive !");
-    }
-
-    @PostMapping("/room/create")
-    public CreateResponseDTO createRoom(CreateRequestDTO createRequestDTO) {
-        return roomService.createRoom(createRequestDTO);
-    }
-
-    @PostMapping("/room/join")
-    public JoinResponseDTO joinRoom(JoinRequestDTO joinRequestDTO) {
-        return roomService.joinRoom(joinRequestDTO);
-    }
-
 }

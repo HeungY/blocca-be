@@ -5,6 +5,8 @@ public enum Action {
     MARK_WHITE,
     MARK_COLOR,
     TURN_CHANGE,
+    GAME_INIT,
+    GAME_START,
     GAME_END,
     GAME_RESTART
 }

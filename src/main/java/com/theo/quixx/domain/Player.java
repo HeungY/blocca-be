@@ -14,7 +14,6 @@ public class Player {
     private final String id;
     private final Map<Color, List<Integer>> board;
     private int failCount = 0;
-    private Set<Color> lockedColors;
 
     public Player(String id) {
         this.id = id;
@@ -22,11 +21,10 @@ public class Player {
         for (Color color : Color.values()) {
             board.put(color, new ArrayList<>());
         }
-        lockedColors = new HashSet<>();
     }
 
-    public boolean canMark(Color color, int number) {
-        if (isLocked(color)) return false;
+    public boolean canMark(Color color, int number, Set<Color> lockedColors) {
+        if(lockedColors.contains(color)) return false;
 
         if (number == color.getFinalNumber() && !judgeMarkFinalNumber(color, number)) return false;
 
@@ -38,7 +36,6 @@ public class Player {
     }
 
     private boolean judgeMarkFinalNumber(Color color, int number){
-        if (isLocked(color)) return false;
         if (number != color.getFinalNumber()) return false;
 
         List<Integer> line = board.get(color);
@@ -47,18 +44,6 @@ public class Player {
         return line.size() >= 5;
     }
 
-    public void lockColor() {
-        for (Color color : Color.values()) {
-            List<Integer> line = board.get(color);
-            if (line.contains(color.getFinalNumber())) {
-                lockedColors.add(color);
-            }
-        }
-    }
-
-    public boolean isLocked(Color color) {
-        return lockedColors.contains(color);
-    }
 
     public String mark(Color color, int number) {
         board.get(color).add(number);

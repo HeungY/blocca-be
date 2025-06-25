@@ -5,8 +5,10 @@ import com.theo.quixx.domain.enums.MarkResult;
 import com.theo.quixx.domain.enums.Phase;
 import com.theo.quixx.dto.game.payload.DicePayload;
 import com.theo.quixx.dto.game.payload.ResultPayload;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import lombok.Getter;
@@ -26,6 +28,7 @@ public class Game {
     private final Set<String> isWhiteSelected = new HashSet<>();
     private Phase currentPhase = Phase.DICE_ROLL_PHASE;
     private final Set<String> restartAgree = new HashSet<>();
+    private Set<Color> lockedColors = new HashSet<>();
 
     public Game(String roomCode, String playerA, String playerB) {
         this.roomCode = roomCode;
@@ -66,8 +69,8 @@ public class Game {
                 dice.getWhite2(),
                 dice.getRed(),
                 dice.getYellow(),
-                dice.getBlue(),
-                dice.getGreen());
+                dice.getGreen(),
+                dice.getBlue());
     }
 
     /**
@@ -95,16 +98,26 @@ public class Game {
             return MarkResult.SUCCESS;
         }
 
+        if (number != (dice.getWhite1() + dice.getWhite2())) {
+            return MarkResult.FAILURE;
+        }
 
-
-        if (player.canMark(color, number)) {
+        if (player.canMark(color, number,lockedColors)) {
             player.mark(color, number);
 
             isWhiteSelected.add(playerId);
 
             if (isWhiteSelected.size() == 2) {
                 currentPhase = Phase.COLOR_PICK_PHASE;
-                players.values().forEach(Player::lockColor);
+
+                for (Player p : players.values()) {
+                    for (Color c : Color.values()) {
+                        if (p.getBoard().get(c).contains(c.getFinalNumber())) {
+                            lockedColors.add(c);
+                        }
+                    }
+                }
+
                 if (isGameOver()) {
                     currentPhase = Phase.END_GAME_PHASE;
                     return MarkResult.END;
@@ -141,17 +154,47 @@ public class Game {
             if (isGameOver()) {
                 return MarkResult.END;
             }
+            endTurn();
             return MarkResult.SUCCESS;
         }
 
-        if (player.canMark(color, number)) {
+
+        switch (color) {
+            case RED:
+                if (number != (dice.getWhite1() + dice.getRed()) && number != dice.getWhite2() + dice.getRed()) {
+                    return MarkResult.FAILURE;
+                }
+                break;
+            case YELLOW:
+                if (number != (dice.getWhite1() + dice.getYellow()) && number != dice.getWhite2() + dice.getYellow()) {
+                    return MarkResult.FAILURE;
+                }
+                break;
+            case GREEN:
+                if (number != (dice.getWhite1() + dice.getGreen()) && number != dice.getWhite2() + dice.getGreen()) {
+                    return MarkResult.FAILURE;
+                }
+                break;
+            case BLUE:
+                if (number != (dice.getWhite1() + dice.getBlue()) && number != dice.getWhite2() + dice.getBlue()) {
+                    return MarkResult.FAILURE;
+                }
+                break;
+
+        }
+
+
+        if (player.canMark(color, number,lockedColors)) {
             player.mark(color, number);
             isColorSelected = true;
             if (isGameOver()) {
                 currentPhase = Phase.END_GAME_PHASE;
                 return MarkResult.END;
             }
-            player.lockColor();
+            if (number == color.getFinalNumber()) {
+                lockedColors.add(color);
+            }
+
             endTurn();
 
             return MarkResult.SUCCESS;
@@ -172,28 +215,39 @@ public class Game {
     }
 
     public void restartGame(String playerId) {
-        if(!currentPhase.equals(Phase.END_GAME_PHASE)) return;
+        if (!currentPhase.equals(Phase.END_GAME_PHASE)) {
+            return;
+        }
 
         restartAgree.add(playerId);
 
-        if(restartAgree.size() == 2) {
+        if (restartAgree.size() == 2) {
             isDiceRolled = false;
             isColorSelected = false;
             isTurnPlayerSkipWhite = false;
             isWhiteSelected.clear();
             restartAgree.clear();
             currentPhase = Phase.DICE_ROLL_PHASE;
+            lockedColors.clear();
         }
 
     }
 
-    public ResultPayload getResult(){
+    public ResultPayload getResult() {
         Result result = new Result(players);
         return result.getResult();
     }
 
-    public String currentTurnPlayer(){
+    public String currentTurnPlayer() {
         return turn.getCurrentPlayer();
+    }
+
+    public int getFailCount(String playerId) {
+        return players.get(playerId).getFailCount();
+    }
+
+    public List<Color> getLockedColors() {
+        return new ArrayList<>(lockedColors);
     }
 
 
@@ -201,20 +255,9 @@ public class Game {
      * 게임 종료 조건: 잠금 2개 또는 실패 4회
      **/
     public boolean isGameOver() {
-        return getLockedColorCount() >= 2 || isAnyPlayerFailed();
+        return lockedColors.size() >= 2 || isAnyPlayerFailed();
     }
 
-
-    /**
-     * 잠긴 색상 개수 반환
-     **/
-
-    public long getLockedColorCount() {
-        return players.values().stream()
-                .flatMap(p -> p.getLockedColors().stream())
-                .distinct()
-                .count();
-    }
 
     /**
      * 플레이어 중 하나라도 4회 실패했는지 여부

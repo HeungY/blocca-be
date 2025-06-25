@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class ResultPayload implements GamePayload {
-    private Map<String, Integer> playerA;
-    private Map<String, Integer> playerB;
+    private Map<String, String> playerA;
+    private Map<String, String> playerB;
     private String winner;
 }

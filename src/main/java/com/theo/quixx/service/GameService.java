@@ -86,7 +86,8 @@ public class GameService {
                                         color,
                                         number,
                                         game.getFailCount(playerId),
-                                        game.getLockedColors()
+                                        game.getLockedColors(),
+                                        game.isWaitOpponentWhitePick()
                                 ))
                                 .build());
 
@@ -120,7 +121,8 @@ public class GameService {
                                         color,
                                         number,
                                         game.getFailCount(playerId),
-                                        game.getLockedColors()
+                                        game.getLockedColors(),
+                                        game.isWaitOpponentWhitePick()
                                 ))
                                 .build());
 

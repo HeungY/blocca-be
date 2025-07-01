@@ -35,11 +35,28 @@ public class Result {
 
     private Map<String, String> calculateScore(Player player) {
         Map<String, String> score = new HashMap<>();
+        int isRedLock = 0;
+        int isYellowLock = 0;
+        int isGreenLock = 0;
+        int isBlueLock = 0;
 
-        int redScore = scoreSet[player.getBoard().get(Color.RED).size()];
-        int yellowScore = scoreSet[player.getBoard().get(Color.YELLOW).size()];
-        int greenScore = scoreSet[player.getBoard().get(Color.GREEN).size()];
-        int blueScore = scoreSet[player.getBoard().get(Color.BLUE).size()];
+        if (player.getBoard().get(Color.RED).contains(Color.RED.getFinalNumber())) {
+            isRedLock++;
+        }
+        if (player.getBoard().get(Color.YELLOW).contains(Color.YELLOW.getFinalNumber())) {
+            isYellowLock++;
+        }
+        if (player.getBoard().get(Color.GREEN).contains(Color.GREEN.getFinalNumber())) {
+            isGreenLock++;
+        }
+        if (player.getBoard().get(Color.BLUE).contains(Color.BLUE.getFinalNumber())) {
+            isBlueLock++;
+        }
+
+        int redScore = scoreSet[player.getBoard().get(Color.RED).size() + isRedLock];
+        int yellowScore = scoreSet[player.getBoard().get(Color.YELLOW).size() + isYellowLock];
+        int greenScore = scoreSet[player.getBoard().get(Color.GREEN).size() + isGreenLock];
+        int blueScore = scoreSet[player.getBoard().get(Color.BLUE).size() + isBlueLock];
 
         int failScore = player.getFailCount() * 5;
 

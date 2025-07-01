@@ -17,11 +17,41 @@ public class Dice {
     private int green;
     private int blue;
 
+    private int callCount = 0;
+    private int test = 1;
+
+    int test() {
+        if (callCount % 2 == 0) {
+            if (test == 6) {
+                test = 1;
+            } else {
+                test++;
+            }
+        }
+        return test;
+    }
+
+    private int test2 = 5;
+
+    int test2() {
+        if (callCount % 2 == 0) {
+            if (test2 == 6) {
+                test2 = 1;
+            } else {
+                test2++;
+            }
+        }
+        return test2;
+    }
+
     public void roll() {
-        this.white1 = generateRandomNumber();
-        this.white2 = generateRandomNumber();
-        this.red = generateRandomNumber();
-        this.yellow = generateRandomNumber();
+        callCount++;
+//        this.white1 = generateRandomNumber();
+//        this.white2 = generateRandomNumber();
+        this.white1 = 6;
+        this.white2 = 6;    // 테스트를 위한 임시 숫자 할당
+        this.red = test();
+        this.yellow = test2();
         this.green = generateRandomNumber();
         this.blue = generateRandomNumber();
     }

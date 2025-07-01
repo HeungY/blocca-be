@@ -29,6 +29,8 @@ public class Game {
     private Phase currentPhase = Phase.DICE_ROLL_PHASE;
     private final Set<String> restartAgree = new HashSet<>();
     private Set<Color> lockedColors = new HashSet<>();
+    private boolean waitOpponentWhitePick = false;
+
 
     public Game(String roomCode, String playerA, String playerB) {
         this.roomCode = roomCode;
@@ -76,6 +78,72 @@ public class Game {
     /**
      * 모든 플레이어가 흰색 주사위 합으로 선택
      **/
+//    public MarkResult markWhite(String playerId, Color color, int number) {
+//        if (!currentPhase.equals(Phase.WHITE_PICK_PHASE)) {
+//            return MarkResult.FAILURE;
+//        }
+//        if (isWhiteSelected.contains(playerId)) {
+//            return MarkResult.FAILURE;
+//        }
+//
+//        Player player = players.get(playerId);
+//
+//        if (number == 0) {
+//            if (turn.getCurrentPlayer().equals(playerId)) {
+//                isTurnPlayerSkipWhite = true;
+//            }
+//            isWhiteSelected.add(playerId);
+//
+//            if (isWhiteSelected.size() == 2) {
+//                currentPhase = Phase.COLOR_PICK_PHASE;
+//
+//                for (Player p : players.values()) {
+//                    for (Color c : Color.values()) {
+//                        if (p.getBoard().get(c).contains(c.getFinalNumber())) {
+//                            lockedColors.add(c);
+//                        }
+//                    }
+//                }
+//
+//                if (isGameOver()) {
+//                    currentPhase = Phase.END_GAME_PHASE;
+//                    return MarkResult.END;
+//                }
+//            }
+//            return MarkResult.SUCCESS;
+//        }
+//
+//        if (number != (dice.getWhite1() + dice.getWhite2())) {
+//            return MarkResult.FAILURE;
+//        }
+//
+//        if (player.canMark(color, number,lockedColors)) {
+//            player.mark(color, number);
+//
+//            isWhiteSelected.add(playerId);
+//
+//            if (isWhiteSelected.size() == 2) {
+//                currentPhase = Phase.COLOR_PICK_PHASE;
+//
+//                for (Player p : players.values()) {
+//                    for (Color c : Color.values()) {
+//                        if (p.getBoard().get(c).contains(c.getFinalNumber())) {
+//                            lockedColors.add(c);
+//                        }
+//                    }
+//                }
+//
+//                if (isGameOver()) {
+//                    currentPhase = Phase.END_GAME_PHASE;
+//                    return MarkResult.END;
+//                }
+//            }
+//
+//            return MarkResult.SUCCESS;
+//        }
+//        return MarkResult.FAILURE;
+//    }
+
     public MarkResult markWhite(String playerId, Color color, int number) {
         if (!currentPhase.equals(Phase.WHITE_PICK_PHASE)) {
             return MarkResult.FAILURE;
@@ -84,49 +152,51 @@ public class Game {
             return MarkResult.FAILURE;
         }
 
-        Player player = players.get(playerId);
-
+        // 1) 스킵 여부 처리
         if (number == 0) {
             if (turn.getCurrentPlayer().equals(playerId)) {
                 isTurnPlayerSkipWhite = true;
             }
-            isWhiteSelected.add(playerId);
-
-            if (isWhiteSelected.size() == 2) {
-                currentPhase = Phase.COLOR_PICK_PHASE;
+        } else {
+            // 2) 실제 숫자 체크 & 마킹
+            if (number != (dice.getWhite1() + dice.getWhite2())) {
+                return MarkResult.FAILURE;
             }
-            return MarkResult.SUCCESS;
-        }
-
-        if (number != (dice.getWhite1() + dice.getWhite2())) {
-            return MarkResult.FAILURE;
-        }
-
-        if (player.canMark(color, number,lockedColors)) {
+            Player player = players.get(playerId);
+            if (!player.canMark(color, number, lockedColors)) {
+                return MarkResult.FAILURE;
+            }
             player.mark(color, number);
+        }
 
-            isWhiteSelected.add(playerId);
+        // 3) 선택 완료 처리
+        isWhiteSelected.add(playerId);
 
-            if (isWhiteSelected.size() == 2) {
-                currentPhase = Phase.COLOR_PICK_PHASE;
+        // 4) 두 명 다 선택했으면 잠금 계산 & 페이즈 전환
+        if (isWhiteSelected.size() == 2) {
+            // 다음 페이즈
+            currentPhase = Phase.COLOR_PICK_PHASE;
 
-                for (Player p : players.values()) {
-                    for (Color c : Color.values()) {
-                        if (p.getBoard().get(c).contains(c.getFinalNumber())) {
-                            lockedColors.add(c);
-                        }
+            // 잠긴 컬러 업데이트
+            for (Player p : players.values()) {
+                for (Color c : Color.values()) {
+                    if (p.getBoard().get(c).contains(c.getFinalNumber())) {
+                        lockedColors.add(c);
                     }
                 }
-
-                if (isGameOver()) {
-                    currentPhase = Phase.END_GAME_PHASE;
-                    return MarkResult.END;
-                }
             }
+            waitOpponentWhitePick = false;
 
-            return MarkResult.SUCCESS;
+            // 게임 종료 체크
+            if (isGameOver()) {
+                currentPhase = Phase.END_GAME_PHASE;
+                return MarkResult.END;
+            }
         }
-        return MarkResult.FAILURE;
+
+        if(isWhiteSelected.size() == 1) waitOpponentWhitePick = true;
+
+        return MarkResult.SUCCESS;
     }
 
     /**
@@ -246,9 +316,13 @@ public class Game {
         return players.get(playerId).getFailCount();
     }
 
-    public List<Color> getLockedColors() {
-        return new ArrayList<>(lockedColors);
-    }
+//    public List<Color> getLockedColors() {
+//        return new ArrayList<>(lockedColors);
+//    }
+
+//    public boolean getWaitOpponentWhitePick() {
+//        return waitOpponentWhitePick;
+//    }
 
 
     /**

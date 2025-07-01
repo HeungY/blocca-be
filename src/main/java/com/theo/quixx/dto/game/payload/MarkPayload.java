@@ -2,6 +2,7 @@ package com.theo.quixx.dto.game.payload;
 
 import com.theo.quixx.domain.enums.Color;
 import java.util.List;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,5 +16,6 @@ public class MarkPayload implements GamePayload {
     private Color color;
     private int number;
     private int failCount;
-    private List<Color> lockedColors;
+    private Set<Color> lockedColors;
+    private boolean waitOpponentPick;
 }

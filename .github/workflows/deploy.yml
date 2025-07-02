@@ -31,6 +31,7 @@ jobs:
         port: 22
         source: build/libs/quixx.jar
         target: /home/ubuntu/quixx
+        strip_components: 2
         debug: true
 
     - name: Restart quixx.service on EC2

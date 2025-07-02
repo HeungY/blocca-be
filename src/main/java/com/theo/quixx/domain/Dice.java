@@ -17,6 +17,8 @@ public class Dice {
     private int green;
     private int blue;
 
+
+
     public void roll() {
         this.white1 = generateRandomNumber();
         this.white2 = generateRandomNumber();

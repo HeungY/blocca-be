@@ -1,9 +1,9 @@
 package com.theo.quixx.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.theo.quixx.domain.Game;
 import com.theo.quixx.domain.enums.Action;
 import com.theo.quixx.domain.enums.Color;
-import com.theo.quixx.domain.Game;
 import com.theo.quixx.domain.enums.MarkResult;
 import com.theo.quixx.dto.game.GameMessage;
 import com.theo.quixx.dto.game.ResponseMessage;
@@ -31,13 +31,10 @@ public class GameService {
         String playerId = message.getId();
         Action action = message.getAction();
 
-        createGame(code,playerId,null);
-
         Game game = gameMap.get(code);
         if (game == null) {
             throw new IllegalArgumentException("해당 코드로 개설된 방이 없습니다.");
         }
-
 
         switch (action) {
             case ROLL_DICE -> {
@@ -70,7 +67,10 @@ public class GameService {
                                         result != MarkResult.FAILURE,
                                         game.getCurrentPhase().name(),
                                         color,
-                                        number
+                                        number,
+                                        game.getFailCount(playerId),
+                                        game.getLockedColors(),
+                                        game.isWaitOpponentWhitePick()
                                 ))
                                 .build());
 
@@ -102,7 +102,10 @@ public class GameService {
                                         result != MarkResult.FAILURE,
                                         game.getCurrentPhase().name(),
                                         color,
-                                        number
+                                        number,
+                                        game.getFailCount(playerId),
+                                        game.getLockedColors(),
+                                        game.isWaitOpponentWhitePick()
                                 ))
                                 .build());
 

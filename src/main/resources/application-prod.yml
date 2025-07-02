@@ -2,3 +2,13 @@ spring:
   config:
     activate:
       on-profile: prod
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${quixx.db.url}/quixx
+    username: ${quixx.db.username}
+    password: ${quixx.db.password}
+  jpa:
+    hibernate:
+      ddl-auto: update
+cors:
+  allowed-origins: https://quixx.world

@@ -30,7 +30,7 @@ jobs:
         key: ${{ secrets.EC2_SSH_KEY }}
         port: 22
         source: build/libs/quixx.jar
-        target: /home/ubuntu/quixx/quixx.jar
+        target: /home/ubuntu/quixx
         debug: true
 
     - name: Restart quixx.service on EC2

@@ -1,7 +1,6 @@
 package com.theo.quixx.dto.game.payload;
 
 import com.theo.quixx.domain.enums.Color;
-import java.util.List;
 import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

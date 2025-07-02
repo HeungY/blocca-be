@@ -9,7 +9,6 @@ import com.theo.quixx.dto.game.GameMessage;
 import com.theo.quixx.dto.game.ResponseMessage;
 import com.theo.quixx.dto.game.payload.MarkPayload;
 import com.theo.quixx.dto.game.payload.TurnPayload;
-import jakarta.annotation.PostConstruct;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.RequiredArgsConstructor;
@@ -27,12 +26,6 @@ public class GameService {
         gameMap.put(roomCode, new Game(roomCode, playerA, playerB));
     }
 
-    @PostConstruct
-    public void testInit() {
-        gameMap.put("TEST123", new Game("TEST123", "tester", "opponent"));
-        System.out.println("🔥 Game initialized with code TEST123");
-    }
-
     public void handleGameMessage(GameMessage message) {
         String code = message.getCode();
         String playerId = message.getId();
@@ -42,7 +35,6 @@ public class GameService {
         if (game == null) {
             throw new IllegalArgumentException("해당 코드로 개설된 방이 없습니다.");
         }
-
 
         switch (action) {
             case ROLL_DICE -> {
@@ -56,15 +48,6 @@ public class GameService {
                                     .payload(game.diceNumbers())
                                     .build());
                 }
-//                messagingTemplate.convertAndSend("/topic/room/"+ code,
-//                        ResponseMessage.builder()
-//                                .code(code)
-//                                .id("SYSTEM")
-//                                .action(Action.ROLL_DICE)
-//                                .payload(game.diceNumbers())
-//                                .build()
-//                );
-
             }
 
             case MARK_WHITE -> {

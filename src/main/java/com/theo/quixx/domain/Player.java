@@ -3,7 +3,6 @@ package com.theo.quixx.domain;
 import com.theo.quixx.domain.enums.Color;
 import java.util.ArrayList;
 import java.util.EnumMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -24,22 +23,32 @@ public class Player {
     }
 
     public boolean canMark(Color color, int number, Set<Color> lockedColors) {
-        if(lockedColors.contains(color)) return false;
+        if (lockedColors.contains(color)) {
+            return false;
+        }
 
-        if (number == color.getFinalNumber() && !judgeMarkFinalNumber(color, number)) return false;
+        if (number == color.getFinalNumber() && !judgeMarkFinalNumber(color, number)) {
+            return false;
+        }
 
         List<Integer> line = board.get(color);
-        if (line.isEmpty()) return true;
+        if (line.isEmpty()) {
+            return true;
+        }
 
         int last = line.get(line.size() - 1);
         return color.isAscending() ? number > last : number < last;
     }
 
-    private boolean judgeMarkFinalNumber(Color color, int number){
-        if (number != color.getFinalNumber()) return false;
+    private boolean judgeMarkFinalNumber(Color color, int number) {
+        if (number != color.getFinalNumber()) {
+            return false;
+        }
 
         List<Integer> line = board.get(color);
-        if (line.isEmpty()) return false;
+        if (line.isEmpty()) {
+            return false;
+        }
 
         return line.size() >= 5;
     }
@@ -50,7 +59,7 @@ public class Player {
         return id;
     }
 
-    public void fail(){
+    public void fail() {
         failCount++;
     }
 }

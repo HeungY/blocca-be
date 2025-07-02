@@ -5,10 +5,8 @@ import com.theo.quixx.domain.enums.MarkResult;
 import com.theo.quixx.domain.enums.Phase;
 import com.theo.quixx.dto.game.payload.DicePayload;
 import com.theo.quixx.dto.game.payload.ResultPayload;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import lombok.Getter;
@@ -75,75 +73,6 @@ public class Game {
                 dice.getBlue());
     }
 
-    /**
-     * 모든 플레이어가 흰색 주사위 합으로 선택
-     **/
-//    public MarkResult markWhite(String playerId, Color color, int number) {
-//        if (!currentPhase.equals(Phase.WHITE_PICK_PHASE)) {
-//            return MarkResult.FAILURE;
-//        }
-//        if (isWhiteSelected.contains(playerId)) {
-//            return MarkResult.FAILURE;
-//        }
-//
-//        Player player = players.get(playerId);
-//
-//        if (number == 0) {
-//            if (turn.getCurrentPlayer().equals(playerId)) {
-//                isTurnPlayerSkipWhite = true;
-//            }
-//            isWhiteSelected.add(playerId);
-//
-//            if (isWhiteSelected.size() == 2) {
-//                currentPhase = Phase.COLOR_PICK_PHASE;
-//
-//                for (Player p : players.values()) {
-//                    for (Color c : Color.values()) {
-//                        if (p.getBoard().get(c).contains(c.getFinalNumber())) {
-//                            lockedColors.add(c);
-//                        }
-//                    }
-//                }
-//
-//                if (isGameOver()) {
-//                    currentPhase = Phase.END_GAME_PHASE;
-//                    return MarkResult.END;
-//                }
-//            }
-//            return MarkResult.SUCCESS;
-//        }
-//
-//        if (number != (dice.getWhite1() + dice.getWhite2())) {
-//            return MarkResult.FAILURE;
-//        }
-//
-//        if (player.canMark(color, number,lockedColors)) {
-//            player.mark(color, number);
-//
-//            isWhiteSelected.add(playerId);
-//
-//            if (isWhiteSelected.size() == 2) {
-//                currentPhase = Phase.COLOR_PICK_PHASE;
-//
-//                for (Player p : players.values()) {
-//                    for (Color c : Color.values()) {
-//                        if (p.getBoard().get(c).contains(c.getFinalNumber())) {
-//                            lockedColors.add(c);
-//                        }
-//                    }
-//                }
-//
-//                if (isGameOver()) {
-//                    currentPhase = Phase.END_GAME_PHASE;
-//                    return MarkResult.END;
-//                }
-//            }
-//
-//            return MarkResult.SUCCESS;
-//        }
-//        return MarkResult.FAILURE;
-//    }
-
     public MarkResult markWhite(String playerId, Color color, int number) {
         if (!currentPhase.equals(Phase.WHITE_PICK_PHASE)) {
             return MarkResult.FAILURE;
@@ -152,13 +81,11 @@ public class Game {
             return MarkResult.FAILURE;
         }
 
-        // 1) 스킵 여부 처리
         if (number == 0) {
             if (turn.getCurrentPlayer().equals(playerId)) {
                 isTurnPlayerSkipWhite = true;
             }
         } else {
-            // 2) 실제 숫자 체크 & 마킹
             if (number != (dice.getWhite1() + dice.getWhite2())) {
                 return MarkResult.FAILURE;
             }
@@ -169,15 +96,11 @@ public class Game {
             player.mark(color, number);
         }
 
-        // 3) 선택 완료 처리
         isWhiteSelected.add(playerId);
 
-        // 4) 두 명 다 선택했으면 잠금 계산 & 페이즈 전환
         if (isWhiteSelected.size() == 2) {
-            // 다음 페이즈
             currentPhase = Phase.COLOR_PICK_PHASE;
 
-            // 잠긴 컬러 업데이트
             for (Player p : players.values()) {
                 for (Color c : Color.values()) {
                     if (p.getBoard().get(c).contains(c.getFinalNumber())) {
@@ -187,21 +110,19 @@ public class Game {
             }
             waitOpponentWhitePick = false;
 
-            // 게임 종료 체크
             if (isGameOver()) {
                 currentPhase = Phase.END_GAME_PHASE;
                 return MarkResult.END;
             }
         }
 
-        if(isWhiteSelected.size() == 1) waitOpponentWhitePick = true;
+        if (isWhiteSelected.size() == 1) {
+            waitOpponentWhitePick = true;
+        }
 
         return MarkResult.SUCCESS;
     }
 
-    /**
-     * 현재 플레이어만 색상 선택 가능
-     **/
     public MarkResult markColor(String playerId, Color color, int number) {
         if (!currentPhase.equals(Phase.COLOR_PICK_PHASE)) {
             return MarkResult.FAILURE;
@@ -212,7 +133,6 @@ public class Game {
         if (isColorSelected) {
             return MarkResult.FAILURE;
         }
-
 
         Player player = players.get(playerId);
 
@@ -227,7 +147,6 @@ public class Game {
             endTurn();
             return MarkResult.SUCCESS;
         }
-
 
         switch (color) {
             case RED:
@@ -253,8 +172,7 @@ public class Game {
 
         }
 
-
-        if (player.canMark(color, number,lockedColors)) {
+        if (player.canMark(color, number, lockedColors)) {
             player.mark(color, number);
             isColorSelected = true;
             if (isGameOver()) {
@@ -272,9 +190,6 @@ public class Game {
         return MarkResult.FAILURE;
     }
 
-    /**
-     * 턴 종료
-     **/
     public void endTurn() {
         turn.changeTurn();
         isDiceRolled = false;
@@ -316,26 +231,12 @@ public class Game {
         return players.get(playerId).getFailCount();
     }
 
-//    public List<Color> getLockedColors() {
-//        return new ArrayList<>(lockedColors);
-//    }
 
-//    public boolean getWaitOpponentWhitePick() {
-//        return waitOpponentWhitePick;
-//    }
-
-
-    /**
-     * 게임 종료 조건: 잠금 2개 또는 실패 4회
-     **/
     public boolean isGameOver() {
         return lockedColors.size() >= 2 || isAnyPlayerFailed();
     }
 
 
-    /**
-     * 플레이어 중 하나라도 4회 실패했는지 여부
-     **/
     public boolean isAnyPlayerFailed() {
         return players.values().stream().anyMatch(p -> p.getFailCount() >= 4);
     }

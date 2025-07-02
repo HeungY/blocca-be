@@ -4,9 +4,9 @@ spring:
       on-profile: prod
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${quixx.db.url}/quixx
-    username: ${quixx.db.username}
-    password: ${quixx.db.password}
+    url: jdbc:mysql://${QUIXX_DB_URL}/quixx
+    username: ${QUIXX_DB_USERNAME}
+    password: ${QUIXX_DB_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: update

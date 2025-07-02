@@ -23,7 +23,7 @@ jobs:
       run: ./gradlew clean bootJar -x test
 
     - name: Copy JAR to EC2
-      uses: appleboy/scp-action@v0.1.8
+      uses: appleboy/scp-action@v0.1.2
       with:
         host: ${{ secrets.EC2_HOST }}
         username: ${{ secrets.EC2_USER }}
@@ -33,7 +33,7 @@ jobs:
         target: /home/ubuntu/quixx/quixx.jar
 
     - name: Restart quixx.service on EC2
-      uses: appleboy/ssh-action@v0.1.8
+      uses: appleboy/ssh-action@v0.1.7
       with:
         host: ${{ secrets.EC2_HOST }}
         username: ${{ secrets.EC2_USER }}

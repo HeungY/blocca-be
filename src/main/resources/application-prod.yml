@@ -12,3 +12,11 @@ spring:
       ddl-auto: update
 cors:
   allowed-origins: https://quixx.world
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  endpoint:
+    prometheus:
+      access: unrestricted

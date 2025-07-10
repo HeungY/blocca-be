@@ -5,9 +5,9 @@ spring:
     import: classpath:secret.yml
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${quixx.db.url}/quixx
-    username: ${quixx.db.username}
-    password: ${quixx.db.password}
+    url: jdbc:mysql://${blocca.db.url}/blocca
+    username: ${blocca.db.username}
+    password: ${blocca.db.password}
   jpa:
     hibernate:
       ddl-auto: update

@@ -29,12 +29,12 @@ jobs:
         username: ${{ secrets.EC2_USER }}
         key: ${{ secrets.EC2_SSH_KEY }}
         port: 22
-        source: build/libs/quixx.jar
-        target: /home/ubuntu/quixx
+        source: build/libs/blocca.jar
+        target: /home/ubuntu/blocca
         strip_components: 2
         debug: true
 
-    - name: Restart quixx.service on EC2
+    - name: Restart blocca.service on EC2
       uses: appleboy/ssh-action@v0.1.7
       with:
         host: ${{ secrets.EC2_HOST }}
@@ -42,5 +42,5 @@ jobs:
         key: ${{ secrets.EC2_SSH_KEY }}
         script: |
           sudo systemctl daemon-reload
-          sudo systemctl restart quixx
-          sudo systemctl status quixx --no-pager
+          sudo systemctl restart blocca
+          sudo systemctl status blocca --no-pager
